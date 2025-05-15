@@ -32,7 +32,7 @@
   <joint name="$(arg prefix)base_fixed" type="fixed">
     <parent link="$(arg prefix)base_link"/>
     <child link="$(arg prefix)link1"/>
-    <origin xyz="0.00 0.035 0.144" rpy="0 0 -1.57"/>
+    <origin xyz="-0.092 0.0 0.091" rpy="0 0 0"/>
   </joint>
 
   <xacro:open_manipulator_x prefix="$(arg prefix)" />
