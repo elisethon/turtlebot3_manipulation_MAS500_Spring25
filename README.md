@@ -1,13 +1,35 @@
 # General Information 
+Several tables in this *README*-file have been copied from our masters thesis named "Framework for Modular Robotic System for Remote Liquid Classification and Sample Retrieval" to provide insight and clearity into the functions of this repository.  
 This repository is a part of the documentation for MAS500 spring 2025 for group 3. 
 The repository is forked from the repository combining the TurtleBot3 Waffle Pi robot platform with the OpenManipulator-X manipulator. 
 This was done to share the changes made during development for MAS500 for the use of the robot platform and manipulator for autonomous deployment and liquid classification.
 For this project, Ubuntu 22.04. and ROS2 Humble was used. 
 
 
-
-
 Additional documentation can be found in the [Sphinx documentation](https://master-documentation-s25-gr3-405ee9.gitlab.io/index.html). 
+
+
+# Hardware Changes and Additions 
+
+
+
+For the thesis, several components have been changened or added. An overview of these main changes are below. 
+
+
+| **Part**                       | **Attached With**                  | **Attached To**          | **3D Part Name**      | **Weight \[g]** |
+| ------------------------------ | ---------------------------------- | ------------------------ | --------------------- | --------------- |
+| Manipulator stand (level four) | Six screws, three support rods     | Top level (level three)  | `ManipulatorStand_P2` | 49              |
+| Bracket                        | Two screws, two bolts              | Top level (level three)  | `Bracket_P3`          | 23              |
+| Sample rack                    |                                    | Bracket                  | `SampelRack_P3`       | 59              |
+| Sensor holder                  |                                    | Collection kit           | `Sensorholder_P3`     | 14              |
+| Sensor                         | Two screws, two bolts, three wires | Sensor holder            |                       | 4               |
+| Test tube                      |                                    | Collection kit           |                       | 7               |
+| Q-tip with attachments         | q-tip lid                          | Test tube                |                       | 2               |
+| Analog to digital converter    | Two screws, five wires             | Bottom level (level two) |                       | 4               |
+
+
+
+
 
 
 
