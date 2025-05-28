@@ -1,3 +1,9 @@
+// THIS SCRIPT DOES: 
+// - Reads sensor values and evaluates them
+// - If sensor values is in a certain range, the joint states are captured and parsed into a .txt file 
+
+// The ranges for the values indicating the liquids were found through testing with the sensor and liquids 
+
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <std_msgs/msg/float32.hpp>
@@ -13,11 +19,11 @@ public:
     
     	clearJointFile(); // Clear old data at startup
     	
-    	// subscribe to joint state tipic
+    	// --- Subscribe to joint state tipic --- //
         joint_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
             "/joint_states", 10, std::bind(&JointStateReader::jointStateCallback, this, std::placeholders::_1));
 
-	// subscribe to conductiv sensor tipic
+	// --- Subscribe to sensor tipic --- //
         sensor_sub_ = this->create_subscription<std_msgs::msg::Float32>(
             "/read_analog_sensor", 10, std::bind(&JointStateReader::sensorCallback, this, std::placeholders::_1));
 
@@ -26,27 +32,27 @@ public:
 
 private:
 
-    // Sensor callback
+    // --- Sensor callback --- //
     void sensorCallback(const std_msgs::msg::Float32::SharedPtr msg) {
         sensor_value_ = msg->data;
         RCLCPP_INFO(this->get_logger(), "Sensor value: %.2f", sensor_value_);
 
-	// Based on the sensor value, determine the substance:
-	if (sensor_value_ < 100.0f) {
-            RCLCPP_INFO(this->get_logger(), "Nothing detected");  				// to low to evaluate
-        } else if (sensor_value_ < 370.0f) {
-            RCLCPP_INFO(this->get_logger(), "Coolant is detected"); 				// the liquid is coolant
-        } else if (sensor_value_ < 450.0f) {
-            RCLCPP_INFO(this->get_logger(), "Unsure of liquid. Saving joint positions..."); 	// Unclear what the liquid 
-            save_position_ = true; 								// saves the joint position where the liquid was detected
+	// --- Based on the sensor value, determine the substance --- //
+	if (sensor_value_ < 1.35f) {
+            RCLCPP_INFO(this->get_logger(), "Nothing detected");  				// To low to evaluate (nothing detected)
+        } else if (sensor_value_ < 1.65f) {
+            RCLCPP_INFO(this->get_logger(), "Coolant is detected"); 				// Liquid is coolant
+        } else if (sensor_value_ < 1.75f) {
+            RCLCPP_INFO(this->get_logger(), "Unsure of liquid. Saving joint positions..."); 	// Unclear what the liquid is
+            save_position_ = true; 								// Save joint position where the liquid was detected
         } else {
-            RCLCPP_INFO(this->get_logger(), "Water is detected"); 				// the liquid is water
+            RCLCPP_INFO(this->get_logger(), "Water is detected"); 				// Liquid is water
         }
         
         
     }
 
-    // joint sate callback
+    // --- Joint sate callback --- //
     void jointStateCallback(const sensor_msgs::msg::JointState::SharedPtr msg) {
         if (save_position_ && !has_saved_) {
             saved_joint_positions_ = msg->position; // copy current joint state
@@ -63,14 +69,15 @@ private:
 
             RCLCPP_INFO(this->get_logger(), "Joint positions saved!");
 
-	    // Print selected joints if data has at least 8 joints
+	    // --- Print joints if data has at least 8 joints --- // 
+		// note: not all data extracted is usefull, only some are fetched 
             if (saved_joint_positions_.size() >= 8) {
                 double joint1 = saved_joint_positions_[3]; // joint 1
                 double joint2 = saved_joint_positions_[1]; // joint 2
                 double joint3 = saved_joint_positions_[7]; // joint 3
                 double joint4 = saved_joint_positions_[4]; // joint 4
 
-		// print the joint state in terminal
+		// --- Print the joint state in terminal --- //
                 RCLCPP_INFO(this->get_logger(),
                             "Saved Joint Values: Joint1: %f, Joint2: %f, Joint3: %f, Joint4: %f",
                             joint1, joint2, joint3, joint4);
@@ -79,7 +86,7 @@ private:
     }
     
     
-// clear the txt file in the begining of the prosess to not overlap values
+// --- Clear the .txt file in the begining to make sure no "leftovers" --- //
 void clearJointFile() {
     std::ofstream file("captured_joint_positions/joint_position.txt", std::ios::trunc);  
     if (file.is_open()) {
