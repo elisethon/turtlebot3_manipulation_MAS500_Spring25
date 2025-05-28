@@ -9,7 +9,7 @@ For this project, Ubuntu 22.04. and ROS2 Humble was used.
 Additional documentation can be found in the [Sphinx documentation](https://master-documentation-s25-gr3-405ee9.gitlab.io/index.html). 
 
 
-# Hardware Changes and Additions 
+#Changes and Additions to Hardware
 ![Image of Robot Platform Aseembly](TBOgBill_Front.jpg)
 
 
@@ -34,7 +34,7 @@ For the thesis, several components have been changened or added. An overview of 
 
 
 
-# Changes and Additions
+# Changes and Additions to Repository
 
 
 From the original repository, some changes have been made, mainly those in the table below. 
