@@ -9,7 +9,7 @@ For this project, Ubuntu 22.04. and ROS2 Humble was used.
 Additional documentation can be found in the [Sphinx documentation](https://master-documentation-s25-gr3-405ee9.gitlab.io/index.html). 
 
 
-#Changes and Additions to Hardware
+# Changes and Additions to Hardware
 ![Image of Robot Platform Aseembly](TBOgBill_Front.jpg)
 
 
