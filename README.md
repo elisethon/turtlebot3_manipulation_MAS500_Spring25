@@ -1,6 +1,14 @@
+# General Information 
 This repository is a part of the documentation for MAS500 spring 2025 for group 3. 
 The repository is forked from the repository combining the TurtleBot3 Waffle Pi robot platform with the OpenManipulator-X manipulator. 
-This was done to share the changes made during development for MAS500 for the use of the robot platform and manipulator for autonomous deployment and liquid classification. 
+This was done to share the changes made during development for MAS500 for the use of the robot platform and manipulator for autonomous deployment and liquid classification.
+For this project, Ubuntu 22.04. and ROS2 Humble was used. 
+
+
+
+
+
+# Changes and Additions
 
 
 From the original repository, some changes have been made, mainly those in the table below. 
@@ -24,4 +32,9 @@ In addition to this, some new files have been made and added. This includes the 
 | `Sensor_liquid_classification.cpp` | Manipulator takes the sensor to classify the liquid at a predefined location           | `src/turtlebot3_manipulator_mass500/scr/` |
 | `adc_publisher.py`                 | Publishes analog sensor signals                                                        | `src/analog_sensor/analog_sensor/`        |
 
+
+
+
+# If Wanting to Use
+**If wanting to use this repository for the TurtleBot3 Waffle Pi in combination with the OpenManipulator-X*: Follow the [guide](https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/), but clone this repository instead of the one described when running the [manipulator and robot platform in tandem](https://emanual.robotis.com/docs/en/platform/turtlebot3/manipulation/#manipulation). Make sure to clone the other repositories and dowload packages as described by the guid. 
 
