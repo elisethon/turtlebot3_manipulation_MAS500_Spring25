@@ -7,6 +7,10 @@ For this project, Ubuntu 22.04. and ROS2 Humble was used.
 
 
 
+Additional documentation can be found in the [Sphinx documentation](https://master-documentation-s25-gr3-405ee9.gitlab.io/index.html). 
+
+
+
 
 # Changes and Additions
 
@@ -33,6 +37,7 @@ In addition to this, some new files have been made and added. This includes the 
 | `adc_publisher.py`                 | Publishes analog sensor signals                                                        | `src/analog_sensor/analog_sensor/`        |
 
 
+The added package *read_analog_sensor*, which reads analog sensor signal and publishes it, is set up for the analog sensor Adafruit Industries LLC 4965 and the 12-bit ADC from Adafruit.  
 
 
 # If Wanting to Use
