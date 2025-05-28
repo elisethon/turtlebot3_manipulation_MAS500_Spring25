@@ -1,3 +1,15 @@
+// MADE AND CHANGED FOR MAS500 SPRING 2025 
+
+// THIS SCRIPT DOES: 
+// - Pick up sensor
+// - Take 1 pull infront of the TurtleBot (from outer position towards the centre close to the TurtleBot)
+// - Returns the sensor 
+// - Moves to home position
+
+// THIS WAS MADE USING THE EXAMPLE SCRIPT FROM THE TURTLEBOT WS,
+// HOWEVER; MOST OF THIS IS MADE USING GENERAL MOVEIT SYNTAX
+
+// THE ORIGINAL COPYRIGHT:
 
 /*******************************************************************************
  * Copyright 2024 ROBOTIS CO., LTD.
@@ -14,7 +26,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-
 /* Authors: Wonho Yoon, Sungho Woo */
 
 #include <memory>
@@ -26,45 +37,44 @@
 
 int main(int argc, char * argv[])
 {
-  // Initialize the ROS2 node
+  // --- Initialize the ROS2 node --- //
   rclcpp::init(argc, argv);
 
-  // Create a shared pointer for the node and enable automatic parameter declaration
+  // --- Create a shared pointer for the node and enable automatic parameter declaration --- //
   auto const node = std::make_shared<rclcpp::Node>(
     "hello_moveit",
     rclcpp::NodeOptions().automatically_declare_parameters_from_overrides(true)
   );
 
-  // Create a logger for logging messages
+  // --- Create a logger for logging messages --- //
   auto const logger = rclcpp::get_logger("hello_moveit");
 
-  // Create the MoveIt MoveGroup Interface for the "arm" planning group
+  // --- Create the MoveIt MoveGroup Interface for the "arm" planning group --- //
   using moveit::planning_interface::MoveGroupInterface;
   auto move_group_interface = MoveGroupInterface(node, "arm");
 
-//--------------------------------------------------------------------------
 
-// MOVING TO TEMPERARY POS HOME 
+
+// --- Moving to temperory home position --- //  
   
   std::map<std::string, double> temp_home;
-
-  // Joint values
+  // --- Joint values --- //
   temp_home["joint1"] = 1.088;  // joint 1 rad
   temp_home["joint2"] = -0.397;  // joint 2 rad
   temp_home["joint3"] = 0.284;  // joint 3 rad
   temp_home["joint4"] = 1.532;  // joint 4 rad
 
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(temp_home);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_tempHome, plan_tempHome] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_tempHome) {
     move_group_interface.execute(plan_tempHome);
     RCLCPP_INFO(logger, "Arm reach the temp home successfully");  // Log success
@@ -75,14 +85,9 @@ int main(int argc, char * argv[])
 
 
 
-
-
-
-
-
-// OPEN GRIPPER
+// --- Open gripper to prepare to take sensor --- //
   
-   //Create the MoveIt MoveGroup Interface for the "gripper" planning group
+   // --- Create the MoveIt MoveGroup Interface for the "gripper" planning group --- //
   auto gripper_interface = MoveGroupInterface(node, "gripper");
 
     gripper_interface.setNamedTarget("open");
@@ -95,32 +100,26 @@ int main(int argc, char * argv[])
 
 
 
-
-
-
-
-
-// ABOVE SENSOR	
+// --- Move above the sensor --- //
   
   std::map<std::string, double> temp_sensor;
-
-  // Joint values
+  // --- Joint values --- //
   temp_sensor["joint1"] = 0.993;  // joint 1 rad
   temp_sensor["joint2"] = -0.150;  // joint 2 rad
   temp_sensor["joint3"] = 0.668;  // joint 3 rad
   temp_sensor["joint4"] = 0.980;  // joint 4 rad (0.956)
 
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(temp_sensor);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_tempSensor, plan_tempSensor] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_tempSensor) {
     move_group_interface.execute(plan_tempSensor);
     RCLCPP_INFO(logger, "Arm reach the temerary sensor");  // Log success
@@ -129,42 +128,29 @@ int main(int argc, char * argv[])
     RCLCPP_ERROR(logger, "Planning failed for the temerary sensor!");  // Log an error if planning fails
   }
   
-  
-
-
-
-
-
-
-
-
-
 
   
   
-  
-  
-  // DOWN TO SENSOR
+  // --- Move down to the sensor --- //
   
   std::map<std::string, double> sensor;
-
-  // Joint values
+  // --- Joint values --- //
   sensor["joint1"] = 0.960;  // joint 1 rad
   sensor["joint2"] = 0.167;  // joint 2 rad
   sensor["joint3"] = 0.576;  // joint 3 rad
   sensor["joint4"] = 0.832;  // joint 4 rad
 
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(sensor);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_sensor, plan_sensor] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_sensor) {
     move_group_interface.execute(plan_sensor);
     RCLCPP_INFO(logger, "Arm reached sensor successfully");  // Log success
@@ -173,16 +159,11 @@ int main(int argc, char * argv[])
     RCLCPP_ERROR(logger, "Planning failed for the reached sensor !");  // Log an error if planning fails
   }
   
-  
- 
- 
- 
- 
- 
- 
- // GRAB SENSOR WITH GRIPPER
 
-  // Set the "close" position for the gripper and move it
+  
+ // --- Grab sensor with gripper --- //
+
+  // --- Set the "close" position for the gripper and move it --- //
   gripper_interface.setNamedTarget("hold_sensor");
   if (gripper_interface.move()) {
     RCLCPP_INFO(logger, "Gripper hold sensor successfully");  // Log success
@@ -190,35 +171,29 @@ int main(int argc, char * argv[])
   } else {
     RCLCPP_ERROR(logger, "Failed to hold sensor");  // Log an error if it fails
   }
-
+  
  
  
- 
- 
- 
- 
- 
-// LIFT SENSOR
+// --- Lift the sensor --- //
   
   std::map<std::string, double> temp_sensorLift;
-
-  // Joint values
+  // --- Joint values --- //
   temp_sensorLift["joint1"] = 1.088;  // joint 1 rad
   temp_sensorLift["joint2"] = -0.397;  // joint 2 rad
   temp_sensorLift["joint3"] = 0.284;  // joint 3 rad
   temp_sensorLift["joint4"] = 1.532;  // joint 4 rad
 
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(temp_sensorLift);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_tempLift, plan_tempLift] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_tempLift) {
     move_group_interface.execute(plan_tempLift);
     RCLCPP_INFO(logger, "Arm lifted sensor");  // Log success
@@ -228,36 +203,27 @@ int main(int argc, char * argv[])
   }
  
  
- 
- 
 
-
-
-
-
-
-
-// TEMPERARY POS LIQUID 
+// --- Temperary outer position ABOVE ground --- // 
 
   std::map<std::string, double> temp_liquid;
-
-  // Joint values
+  // --- Joint values --- //
   temp_liquid["joint1"] = 1.837;  // joint 1 rad
   temp_liquid["joint2"] = 0.434;  // joint 2 rad
   temp_liquid["joint3"] = -0.006;  // joint 3 rad
   temp_liquid["joint4"] = 1.065;  // joint 4 rad
 
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(temp_liquid);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_tempLiquid, plan_tempLiquid] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_tempLiquid) {
     move_group_interface.execute(plan_tempLiquid);
     RCLCPP_INFO(logger, "Arm is above liquid successfully");  // Log success
@@ -268,32 +234,26 @@ int main(int argc, char * argv[])
 
 
 
-
-
-
-
-
-// TAKE TEST OF LIQUID, BEGINNING
+// --- Temperary outer position on ground ---// 
   
   std::map<std::string, double> liquid1;
-
-  // Joint values
+  // --- Joint values --- //
   liquid1["joint1"] = 1.840;   // joint 1 rad  
   liquid1["joint2"] = 0.723;  // joint 2 rad   
   liquid1["joint3"] = -0.146;  // joint 3 rad   
   liquid1["joint4"] = 1.007;  // joint 4 rad   
 
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(liquid1);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_liquid1, plan_liquid1] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_liquid1) {
     move_group_interface.execute(plan_liquid1);
     RCLCPP_INFO(logger, "Are reach the liquid1 successfully");  // Log success
@@ -304,31 +264,26 @@ int main(int argc, char * argv[])
 
 
 
-
-
-
-
-// TAKE TEST OF LIQUID, END
+// --- Temperary inner position on ground --- //
   
   std::map<std::string, double> liquid2;
-
-  // Joint values
+  // --- Joint values --- //
   liquid2["joint1"] = 1.624;  // joint 1 rad   1.624
   liquid2["joint2"] = 0.520;  // joint 2 rad   0.420
   liquid2["joint3"] = 0.300;  // joint 3 rad   0.662
   liquid2["joint4"] = 1.007;  // joint 4 rad   0.724
 
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(liquid2);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_liquid2, plan_liquid2] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_liquid2) {
     move_group_interface.execute(plan_liquid2);
     RCLCPP_INFO(logger, "Are reach the liquid2 successfully");  // Log success
@@ -339,26 +294,19 @@ int main(int argc, char * argv[])
 
 
 
+// --- Temporary position to avoid collision (outer position again) --- //
 
-
-
-
-
-
-// ABOVE LIQUID
-
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(temp_liquid);
-  //move_group_interface.setPlanningTime(10.0); // 5s to plan the path
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_tempLiquid_2, plan_tempLiquid_2] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_tempLiquid_2) {
     move_group_interface.execute(plan_tempLiquid_2);
     RCLCPP_INFO(logger, "Arm reach the temp liquid successfully");  // Log success
@@ -369,25 +317,19 @@ int main(int argc, char * argv[])
 
 
 
+  // --- Move above the collection kit --- // 
 
-
-
-
-
-  // ABOVE COLLECTION KIT
-
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(temp_sensorLift);
-  //move_group_interface.setPlanningTime(10.0); // 5s to plan the path
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_tempLift_2, plan_tempLift_2] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_tempLift_2) {
     move_group_interface.execute(plan_tempLift_2);
     RCLCPP_INFO(logger, "Arm reach above collection kit successfully");  // Log success
@@ -398,24 +340,19 @@ int main(int argc, char * argv[])
 
 
 
+  // --- Adjustments to position above collection kit (for precision) --- // 
 
-
-
-
-  // ABOVE COLLECTION KIT (FOR PRESITION)
-
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(temp_sensor);
-  //move_group_interface.setPlanningTime(10.0); // 5s to plan the path
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_tempSensor_3, plan_tempSensor_3] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_tempSensor_3) {
     move_group_interface.execute(plan_tempSensor_3);
     RCLCPP_INFO(logger, "Arm reach above collection kit successfully");  // Log success
@@ -426,21 +363,18 @@ int main(int argc, char * argv[])
 
 
 
-
-
-
-// PUT SENSOR BACK IN PLACE
+// --- Put sensor back on the tap on the collection kit --- // 
 
   move_group_interface.setJointValueTarget(sensor);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_sensor_2, plan_sensor_2] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_sensor_2) {
     move_group_interface.execute(plan_sensor_2);
     RCLCPP_INFO(logger, "Arm putting sensor back successfully");  // Log success
@@ -451,11 +385,7 @@ int main(int argc, char * argv[])
   
   
   
-  
-  
-  
-  
-// OPEN GRIPPER
+// --- Open gripper to let go of sensor --- //
 
     gripper_interface.setNamedTarget("open");
     if (gripper_interface.move()) {
@@ -464,28 +394,22 @@ int main(int argc, char * argv[])
     } else {
       RCLCPP_ERROR(logger, "Failed to open the gripper");  // Log an error if it fails
     }
+
   
   
-  
- 
+// --- Move to temperary home position --- // 
 
-
-
-
-
-// TEMPERARY HOME POS
-
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(temp_home);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_tempHome_2, plan_tempHome_2] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_tempHome_2) {
     move_group_interface.execute(plan_tempHome_2);
     RCLCPP_INFO(logger, "Arm reach the temp home successfully");  // Log success
@@ -496,13 +420,9 @@ int main(int argc, char * argv[])
 
 
 
+// --- Closing gripper to prepare to go to home position --- // 
 
-  
-
-
-// CLOSING GRIPPER
-
-  // Set the "close" position for the gripper and move it
+  // --- Set the "close" position for the gripper and move it --- //
   gripper_interface.setNamedTarget("close");
   if (gripper_interface.move()) {
     RCLCPP_INFO(logger, "Gripper closed successfully");  // Log success
@@ -513,30 +433,26 @@ int main(int argc, char * argv[])
 
   
 
-
-
-
-// HOME POSITION 
+// --- Move to home position --- //
   
   std::map<std::string, double> home;
-
-  // Joint values
+  // --- Joint values --- //
   home["joint1"] = 0.002;  // joint 1 rad
   home["joint2"] = -1.046;  // joint 2 rad
   home["joint3"] = 1.077;  // joint 3 rad
   home["joint4"] = 0.011;  // joint 4 rad
 
-  // Set the target pose for the arm
+  // --- Set the target pose for the arm --- //
   move_group_interface.setJointValueTarget(home);
 
-  // Plan the motion for the arm to reach the target pose
+  // --- Plan the motion for the arm to reach the target pose --- //
   auto const [success_home, plan_home] = [&move_group_interface]{
     moveit::planning_interface::MoveGroupInterface::Plan msg;
     auto const ok = static_cast<bool>(move_group_interface.plan(msg));
     return std::make_pair(ok, msg);
   }();
 
-  // If planning succeeds, execute the planned motion
+  // --- If planning succeeds, execute it --- //
   if(success_home) {
     move_group_interface.execute(plan_home);
     RCLCPP_INFO(logger, "Arm reach the home pos successfully");  // Log success
@@ -547,11 +463,8 @@ int main(int argc, char * argv[])
 
 
 
-
-
-
-
-  // Shut down the ROS2 node
+  // --- Shut down the ROS2 node --- //
+  
   rclcpp::shutdown();
   return 0;
 }
