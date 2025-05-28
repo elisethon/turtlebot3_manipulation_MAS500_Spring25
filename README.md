@@ -10,7 +10,7 @@ Additional documentation can be found in the [Sphinx documentation](https://mast
 
 
 # Hardware Changes and Additions 
-
+![Image of Robot Platform Aseembly](TBOgBill_Front.jpg)
 
 
 For the thesis, several components have been changened or added. An overview of these main changes are below. 
