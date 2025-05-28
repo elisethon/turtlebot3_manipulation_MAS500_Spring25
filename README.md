@@ -36,5 +36,7 @@ In addition to this, some new files have been made and added. This includes the 
 
 
 # If Wanting to Use
-**If wanting to use this repository for the TurtleBot3 Waffle Pi in combination with the OpenManipulator-X*: Follow the [guide](https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/), but clone this repository instead of the one described when running the [manipulator and robot platform in tandem](https://emanual.robotis.com/docs/en/platform/turtlebot3/manipulation/#manipulation). Make sure to clone the other repositories and dowload packages as described by the guid. 
+*If wanting to use this repository for the TurtleBot3 Waffle Pi in combination with the OpenManipulator-X*: 
+Follow the [guide](https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/), but clone this repository instead of the one described when running the [manipulator and robot platform in tandem](https://emanual.robotis.com/docs/en/platform/turtlebot3/manipulation/#manipulation). 
+Make sure to clone the other repositories and dowload packages as described by the guid. 
 
